@@ -35,6 +35,7 @@ export function declareVars(memory: StateMemory, unfinishedCnt: number): Compani
 		result.push({ name: `unfinished_short_${i}`, label: `Unfinished/planned broadcast name shortened #${i}` });
 		result.push({ name: `unfinished_state_${i}`, label: `Unfinished/planned broadcast state #${i}` });
 		result.push({ name: `unfinished_health_${i}`, label: `Unfinished/planned broadcast's stream health #${i}` });
+		result.push({ name: `unfinished_livechat_count_${i}`, label: `Unfinished/planned broadcast's number of messages in live chat #${i}` });
 	});
 
 	return result;
@@ -168,7 +169,11 @@ export function getUnfinishedBroadcastVars(index: number, broadcast: Broadcast):
 		name: `unfinished_short_${index}`,
 		value: broadcast.Name.substr(0, 19),
 	};
-	return [contentName, contentShort];
+	const contentMessageCount: VariableContent = {
+		name: `unfinished_livechat_count_${index}`,
+		value: broadcast.LiveChatMsgCount.toString(),
+	}
+	return [contentName, contentShort, contentMessageCount];
 }
 
 /**
@@ -225,7 +230,11 @@ export function getUnfinishedDefaultVars(index: number): VariableContent[] {
 		name: `unfinished_state_${index}`,
 		value: 'n/a',
 	};
-	return [content, contentShort, health];
+	const contentMessageCount: VariableContent =  {
+		name: `unfinished_livechat_count_${index}`,
+		value: '0',
+	}
+	return [content, contentShort, health, contentMessageCount];
 }
 
 /**

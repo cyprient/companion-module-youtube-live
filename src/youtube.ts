@@ -55,7 +55,7 @@ export interface YoutubeAPI {
 	 * @param id Live chat ID
 	 * @param message Content of the message (max. 200 characters)
 	 */
-	sendMessageToLiveChat(id: String, message: String): Promise<void>;
+	sendMessageToLiveChat(id: string, message: string): Promise<void>;
 }
 
 /**
@@ -86,7 +86,7 @@ export class YoutubeConnector implements YoutubeAPI {
 	 */
 	async listBroadcasts(): Promise<BroadcastMap> {
 		const response = await this.ApiClient.liveBroadcasts.list({
-			part: 'snippet, status, contentDetails',
+			part: 'snippet, status, contentDetails, statistics',
 			broadcastType: 'all',
 			mine: true,
 			maxResults: this.MaxBroadcasts,
@@ -107,6 +107,7 @@ export class YoutubeConnector implements YoutubeAPI {
 				MonitorStreamEnabled: monitor,
 				ScheduledStartTime: item.snippet!.scheduledStartTime!,
 				LiveChatId: item.snippet!.liveChatId!,
+				LiveChatMsgCount: item.statistics!.totalChatCount!,
 			};
 		});
 
@@ -118,7 +119,7 @@ export class YoutubeConnector implements YoutubeAPI {
 	 */
 	async refreshBroadcastStatus1(broadcast: Broadcast): Promise<Broadcast> {
 		const response = await this.ApiClient.liveBroadcasts.list({
-			part: 'status',
+			part: 'status, statistics',
 			id: broadcast.Id,
 			maxResults: 1,
 		});
@@ -136,7 +137,8 @@ export class YoutubeConnector implements YoutubeAPI {
 			BoundStreamId: broadcast.BoundStreamId,
 			MonitorStreamEnabled: broadcast.MonitorStreamEnabled,
 			ScheduledStartTime: broadcast.ScheduledStartTime,
-			LiveChatId: broadcast.LiveChatId!,
+			LiveChatId: broadcast.LiveChatId,
+			LiveChatMsgCount: broadcast.LiveChatMsgCount,
 		};
 	}
 
@@ -145,7 +147,7 @@ export class YoutubeConnector implements YoutubeAPI {
 	 */
 	async refreshBroadcastStatus(current: BroadcastMap): Promise<BroadcastMap> {
 		const response = await this.ApiClient.liveBroadcasts.list({
-			part: 'status',
+			part: 'status, statistics',
 			id: Object.keys(current).join(','),
 			maxResults: this.MaxBroadcasts,
 		});
@@ -164,6 +166,7 @@ export class YoutubeConnector implements YoutubeAPI {
 				MonitorStreamEnabled: current[id].MonitorStreamEnabled,
 				ScheduledStartTime: current[id].ScheduledStartTime,
 				LiveChatId: current[id].LiveChatId,
+				LiveChatMsgCount: current[id].LiveChatMsgCount,
 			};
 		});
 

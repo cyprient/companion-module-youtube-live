@@ -197,7 +197,19 @@ export function listPresets(broadcasts: BroadcastMap, rgb: RGBFunction, unfinish
 				],
 				actions: [],
 			};
-			presets.push(unfinished, stream);
+			const liveChatCount: CompanionPreset = {
+				category: 'Unfinished/planned broadcasts',
+				label: `Unfinished broadcast's number of messages in live chat #${i}`,
+				bank: {
+					style: 'text',
+					text: `$(YT:unfinished_livechat_count_${i})`,
+					size: 'auto',
+					color: rgb(255, 255, 255),
+					bgcolor: 0,
+				},
+				actions: [],
+			};
+			presets.push(unfinished, stream, liveChatCount);
 		}
 	});
 

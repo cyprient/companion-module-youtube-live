@@ -80,6 +80,9 @@ export interface Broadcast {
 
 	/** Broadcast live chat ID, e.g. KicKGFVDSXoxX3ZKLWdmd2QyNlEzY4l2RHhQZxILWVZ5OGhfNC1GZ0k */
 	LiveChatId: string;
+
+	/** Broadcast live chat messages count */
+	LiveChatMsgCount: number;
 }
 
 /**
