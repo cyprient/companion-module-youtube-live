@@ -107,7 +107,7 @@ export class YoutubeConnector implements YoutubeAPI {
 				MonitorStreamEnabled: monitor,
 				ScheduledStartTime: item.snippet!.scheduledStartTime!,
 				LiveChatId: item.snippet!.liveChatId!,
-				LiveChatMsgCount: item.statistics!.totalChatCount as number,
+				LiveChatMsgCount: item.statistics!.totalChatCount! as number,
 			};
 		});
 
