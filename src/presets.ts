@@ -207,6 +207,7 @@ export function listPresets(broadcasts: BroadcastMap, rgb: RGBFunction, unfinish
 					color: rgb(255, 255, 255),
 					bgcolor: 0,
 				},
+				feedbacks: [],
 				actions: [],
 			};
 			presets.push(unfinished, stream, liveChatCount);
