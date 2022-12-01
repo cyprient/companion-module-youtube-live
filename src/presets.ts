@@ -210,7 +210,20 @@ export function listPresets(broadcasts: BroadcastMap, rgb: RGBFunction, unfinish
 				feedbacks: [],
 				actions: [],
 			};
-			presets.push(unfinished, stream, liveChatCount);
+			const liveViewers: CompanionPreset = {
+				category: 'Unfinished/planned broadcasts',
+				label: `Unfinished broadcast's live viewers #${i}`,
+				bank: {
+					style: 'text',
+					text: `$(YT:unfinished_live_viewers_${i})`,
+					size: 'auto',
+					color: rgb(255, 255, 255),
+					bgcolor: 0,
+				},
+				feedbacks: [],
+				actions: [],
+			};
+			presets.push(unfinished, stream, liveChatCount, liveViewers);
 		}
 	});
 
