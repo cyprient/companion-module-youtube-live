@@ -130,7 +130,7 @@ export class YoutubeConnector implements YoutubeAPI {
 		}
 		const item = response.data.items[0];
 		const status = item.status!.lifeCycleStatus! as BroadcastLifecycle;
-		const concurrentViewers = item.statistics!.concurrentViewers;
+		const concurrentViewers = item.statistics!.concurrentViewers! as string;
 
 		return {
 			Id: broadcast.Id,
@@ -160,7 +160,7 @@ export class YoutubeConnector implements YoutubeAPI {
 		response.data.items?.forEach((item) => {
 			const id = item.id!;
 			const status = item.status!.lifeCycleStatus! as BroadcastLifecycle;
-			const concurrentViewers = item.statistics!.concurrentViewers;
+			const concurrentViewers = item.statistics!.concurrentViewers! as string;
 
 			mapping[id] = {
 				Id: id,
