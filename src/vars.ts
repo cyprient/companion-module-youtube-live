@@ -172,7 +172,7 @@ export function getUnfinishedBroadcastVars(index: number, broadcast: Broadcast):
 	};
 	const contentMessageCount: VariableContent = {
 		name: `unfinished_livechat_count_${index}`,
-		value: broadcast.LiveChatMsgCount as unknown as string,
+		value: broadcast.LiveChatMessagesCount,
 	};
 	const contentLiveViewers: VariableContent = {
 		name: `unfinished_live_viewers_${index}`,
