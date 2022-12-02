@@ -237,7 +237,7 @@ export function getUnfinishedDefaultVars(index: number): VariableContent[] {
 	};
 	const contentMessageCount: VariableContent = {
 		name: `unfinished_livechat_count_${index}`,
-		value: '0',
+		value: 'n/a',
 	}
 	const contentLiveViewers: VariableContent = {
 		name: `unfinished_live_viewers_${index}`,
