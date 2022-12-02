@@ -107,7 +107,7 @@ export class YoutubeConnector implements YoutubeAPI {
 				MonitorStreamEnabled: monitor,
 				ScheduledStartTime: item.snippet!.scheduledStartTime!,
 				LiveChatId: item.snippet!.liveChatId!,
-				LiveChatMsgCount: item.statistics!.totalChatCount! as unknown as number,
+				LiveChatMessagesCount: item.statistics!.totalChatCount!,
 				LiveConcurrentViewers: item.statistics!.concurrentViewers!,
 			};
 		});
@@ -130,6 +130,7 @@ export class YoutubeConnector implements YoutubeAPI {
 		}
 		const item = response.data.items[0];
 		const status = item.status!.lifeCycleStatus! as BroadcastLifecycle;
+		const chatMessagesCount = item.statistics!.totalChatCount! as string;
 		const concurrentViewers = item.statistics!.concurrentViewers! as string;
 
 		return {
@@ -140,7 +141,7 @@ export class YoutubeConnector implements YoutubeAPI {
 			MonitorStreamEnabled: broadcast.MonitorStreamEnabled,
 			ScheduledStartTime: broadcast.ScheduledStartTime,
 			LiveChatId: broadcast.LiveChatId,
-			LiveChatMsgCount: broadcast.LiveChatMsgCount,
+			LiveChatMessagesCount: chatMessagesCount,
 			LiveConcurrentViewers: concurrentViewers,
 		};
 	}
@@ -160,6 +161,7 @@ export class YoutubeConnector implements YoutubeAPI {
 		response.data.items?.forEach((item) => {
 			const id = item.id!;
 			const status = item.status!.lifeCycleStatus! as BroadcastLifecycle;
+			const chatMessagesCount = item.statistics!.totalChatCount! as string;
 			const concurrentViewers = item.statistics!.concurrentViewers! as string;
 
 			mapping[id] = {
@@ -170,7 +172,7 @@ export class YoutubeConnector implements YoutubeAPI {
 				MonitorStreamEnabled: current[id].MonitorStreamEnabled,
 				ScheduledStartTime: current[id].ScheduledStartTime,
 				LiveChatId: current[id].LiveChatId,
-				LiveChatMsgCount: current[id].LiveChatMsgCount,
+				LiveChatMessagesCount: chatMessagesCount,
 				LiveConcurrentViewers: concurrentViewers,
 			};
 		});

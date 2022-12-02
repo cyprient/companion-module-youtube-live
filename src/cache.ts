@@ -82,7 +82,7 @@ export interface Broadcast {
 	LiveChatId: string;
 
 	/** Live chat messages count */
-	LiveChatMsgCount: number;
+	LiveChatMessagesCount: string;
 
 	/** Live broadcast concurrent viewers  */
 	LiveConcurrentViewers: string;
