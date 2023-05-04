@@ -9,7 +9,7 @@
 		"build:main": "tsc -p tsconfig.build.json",
 		"build:watch": "tsc -p tsconfig.build.json --watch",
 		"lint": "eslint . --ext .ts",
-		"test": "jest"
+		"test": "jest --runInBand"
 	},
 	"repository": {
 		"type": "git",
