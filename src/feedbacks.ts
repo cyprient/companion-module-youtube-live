@@ -27,6 +27,7 @@ export enum FeedbackId {
 	StreamHealthOK = 'broadcast_bound_stream_health_ok',
 	StreamHealthBad = 'broadcast_bound_stream_health_bad',
 	StreamHealthNoData = 'broadcast_bound_stream_health_nodata',
+	StreamHealthIssue = 'broadcast_bound_stream_health_issue',
 }
 
 /**
@@ -701,6 +702,44 @@ export function listFeedbacks(
 
 				if (streamId == null || !(streamId in core!.Cache.Streams)) return false
 				return (core!.Cache.Streams[streamId].Health === StreamHealth.NoData) ? true : false;
+			},
+		},
+		[FeedbackId.StreamHealthIssue]: {
+			type: 'boolean',
+			name: 'Stream has issue',
+			description: 'Indicate if the health of the bounded stream is bad or if it does not receive data',
+			defaultStyle: {
+				color: color.health.noData.text,
+				bgcolor: color.health.noData.bg,
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Broadcast',
+					id: 'broadcast',
+					choices: [...broadcastEntries, ...broadcastUnfinishedEntries],
+					default: defaultBroadcast,
+				},
+			],
+			callback: (event: CompanionFeedbackBooleanEvent): boolean => {
+				if (!checkCore) return false;
+				if (!event.options.broadcast) return false;
+
+				const id = event.options.broadcast as BroadcastID;
+				let streamId: string | null;
+				
+				if (id in core!.Cache.Broadcasts) {
+					if (core!.Cache.Broadcasts[id].Status === BroadcastLifecycle.Complete) return false;
+					streamId = core!.Cache.Broadcasts[id].BoundStreamId
+				} else {
+					const unfinished = core!.Cache.UnfinishedBroadcasts.find((_a, i) => `unfinished_${i}` === id)
+					if (unfinished && unfinished.Status !== BroadcastLifecycle.Complete) streamId = unfinished.BoundStreamId
+					else return false
+				}
+
+				if (streamId == null || !(streamId in core!.Cache.Streams)) return false
+				return (core!.Cache.Streams[streamId].Health === StreamHealth.NoData
+						|| core!.Cache.Streams[streamId].Health === StreamHealth.Bad) ? true : false;
 			},
 		},
 	};
