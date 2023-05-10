@@ -22,6 +22,10 @@ So all broadcasts to be controlled by the module have to be created in the YouTu
 
 [ytapi]: https://developers.google.com/youtube/v3/live/docs/liveBroadcasts/transition
 
+### Available feedbacks
+- **Broadcast state feedbacks** - these 8 feedbacks give you information about your broadcast state.
+- **Stream health feedbacks** - these 5 feedbacks give you information about the "stream health" of the broadcast.
+
 ### Configuration
 
 #### Connecting to YouTube account
