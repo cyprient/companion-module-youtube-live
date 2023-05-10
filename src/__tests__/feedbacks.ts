@@ -23,7 +23,7 @@ const SampleMemory: StateMemory = {
 	Broadcasts: {
 		test: {
 			Id: 'test',
-			Name: 'Test Broadcast',
+			Name: 'Test broadcast',
 			MonitorStreamEnabled: true,
 			Status: BroadcastLifecycle.Live,
 			BoundStreamId: 'abcd',
@@ -31,6 +31,16 @@ const SampleMemory: StateMemory = {
 			LiveChatId: 'lcTest',
 			LiveConcurrentViewers: '24',
 		},
+		testUnknownStreamID: {
+			Id: 'testUnknownStreamID',
+			Name: 'Test broadcast with unknown stream ID',
+			MonitorStreamEnabled: true,
+			Status: BroadcastLifecycle.Live,
+			BoundStreamId: 'unknownStream',
+			ScheduledStartTime: '2021-11-30T20:00:00',
+			LiveChatId: 'lcTest',
+			LiveConcurrentViewers: '24',
+		}
 	},
 	Streams: {
 		abcd: {
@@ -603,60 +613,224 @@ describe('Stream health feedbacks', () => {
 		jest.clearAllTimers();
 	});
 
-	test('Good health state', () => {
-		let event = clone(SampleBroadcastStatusEvent);
-		const feedback = feedbacks[FeedbackId.StreamHealthGood] as CompanionBooleanFeedbackDefinition;
+	describe('"Good" feedback', () => {
+		test('Test feedback', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthGood] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthGood });
+			core.Cache.Streams['abcd'].Health = StreamHealth.Good;
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(true);
+		});
 
-		// Change properties for the test
-		Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthGood });
-		core.Cache.Streams['abcd'].Health = StreamHealth.Good;
+		test('Test feedback with unknown broadcast ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthGood] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event.options, 'broadcast', { value: 'unknown' })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthGood });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
 
-		// Test
-		const result = feedback.callback(event, SampleContext);
-		expect(result).toBe(true);
+		test('Test feedback without broadcast ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthGood] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event, 'options', { value: {} })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthGood });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
+
+		test('Test feedback with unknown stream ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthGood] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event.options, 'broadcast', { value: 'testUnknownStreamID' })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthGood });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
+	});
+	
+	describe('"OK" feedback', () => {
+		test('Test feedback', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthOK] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthOK });
+			core.Cache.Streams['abcd'].Health = StreamHealth.OK;
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(true);
+		});
+
+		test('Test feedback with unknown broadcast ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthOK] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event.options, 'broadcast', { value: 'unknown' })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthOK });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
+
+		test('Test feedback without broadcast ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthOK] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event, 'options', { value: {} })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthOK });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
+
+		test('Test feedback with unknown stream ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthOK] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event.options, 'broadcast', { value: 'testUnknownStreamID' })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthOK });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
 	});
 
-	test('OK health state', () => {
-		let event = clone(SampleBroadcastStatusEvent);
-		const feedback = feedbacks[FeedbackId.StreamHealthOK] as CompanionBooleanFeedbackDefinition;
+	describe('"Bad" feedback', () => {
+		test('Test feedback', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthBad] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthBad });
+			core.Cache.Streams['abcd'].Health = StreamHealth.Bad;
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(true);
+		});
 
-		// Change properties for the test
-		Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthOK });
-		core.Cache.Streams['abcd'].Health = StreamHealth.OK;
+		test('Test feedback with unknown broadcast ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthBad] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event.options, 'broadcast', { value: 'unknown' })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthBad });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
 
-		// Test
-		const result = feedback.callback(event, SampleContext);
-		expect(result).toBe(true);
+		test('Test feedback without broadcast ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthBad] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event, 'options', { value: {} })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthBad });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
+
+		test('Test feedback with unknown stream ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthBad] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event.options, 'broadcast', { value: 'testUnknownStreamID' })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthBad });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
 	});
 
-	test('Bad health state', () => {
-		let event = clone(SampleBroadcastStatusEvent);
-		const feedback = feedbacks[FeedbackId.StreamHealthBad] as CompanionBooleanFeedbackDefinition;
+	describe('"No data" feedback', () => {
+		test('Test feedback', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthNoData] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthNoData });
+			core.Cache.Streams['abcd'].Health = StreamHealth.NoData;
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(true);
+		});
 
-		// Change properties for the test
-		Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthBad });
-		core.Cache.Streams['abcd'].Health = StreamHealth.Bad;
+		test('Test feedback with unknown broadcast ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthNoData] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event.options, 'broadcast', { value: 'unknown' })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthNoData });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
 
-		// Test
-		const result = feedback.callback(event, SampleContext);
-		expect(result).toBe(true);
-	});
+		test('Test feedback without broadcast ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthNoData] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event, 'options', { value: {} })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthNoData });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
 
-	test('No data state', () => {
-		let event = clone(SampleBroadcastStatusEvent);
-		const feedback = feedbacks[FeedbackId.StreamHealthNoData] as CompanionBooleanFeedbackDefinition;
-
-		// Change properties for the test
-		Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthNoData });
-		core.Cache.Streams['abcd'].Health = StreamHealth.NoData;
-
-		// Test
-		const result = feedback.callback(event, SampleContext);
-		expect(result).toBe(true);
+		test('Test feedback with unknown stream ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthNoData] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event.options, 'broadcast', { value: 'testUnknownStreamID' })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthNoData });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
 	});
 
 	describe('Health issue feedback', () => {
-		test('Good health', () => {
+		test('Test feedback with "Good" health state', () => {
 			let event = clone(SampleBroadcastStatusEvent);
 			const feedback = feedbacks[FeedbackId.StreamHealthIssue] as CompanionBooleanFeedbackDefinition;
 	
@@ -669,7 +843,7 @@ describe('Stream health feedbacks', () => {
 			expect(result).toBe(false);
 		});
 
-		test('OK health', () => {
+		test('Test feedback with "OK" health state', () => {
 			let event = clone(SampleBroadcastStatusEvent);
 			const feedback = feedbacks[FeedbackId.StreamHealthIssue] as CompanionBooleanFeedbackDefinition;
 	
@@ -682,7 +856,7 @@ describe('Stream health feedbacks', () => {
 			expect(result).toBe(false);
 		});
 
-		test('Bad health', () => {
+		test('Test feedback with "Bad" health state', () => {
 			let event = clone(SampleBroadcastStatusEvent);
 			const feedback = feedbacks[FeedbackId.StreamHealthIssue] as CompanionBooleanFeedbackDefinition;
 	
@@ -695,7 +869,7 @@ describe('Stream health feedbacks', () => {
 			expect(result).toBe(true);
 		});
 	
-		test('No data', () => {
+		test('Test feedback with "No data" health state', () => {
 			let event = clone(SampleBroadcastStatusEvent);
 			const feedback = feedbacks[FeedbackId.StreamHealthIssue] as CompanionBooleanFeedbackDefinition;
 	
@@ -706,6 +880,45 @@ describe('Stream health feedbacks', () => {
 			// Test
 			const result = feedback.callback(event, SampleContext);
 			expect(result).toBe(true);
+		});
+
+		test('Test feedback with unknown broadcast ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthIssue] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event.options, 'broadcast', { value: 'unknown' })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthIssue });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
+
+		test('Test feedback without broadcast ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthIssue] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event, 'options', { value: {} })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthIssue });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
+		});
+
+		test('Test feedback with unknown stream ID', () => {
+			let event = clone(SampleBroadcastStatusEvent);
+			const feedback = feedbacks[FeedbackId.StreamHealthIssue] as CompanionBooleanFeedbackDefinition;
+	
+			// Change properties for the test
+			Object.defineProperty(event.options, 'broadcast', { value: 'testUnknownStreamID' })
+			Object.defineProperty(event, 'feedbackId', { value: FeedbackId.StreamHealthIssue });
+	
+			// Test
+			const result = feedback.callback(event, SampleContext);
+			expect(result).toBe(false);
 		});
 	})
 });
