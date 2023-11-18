@@ -21,6 +21,7 @@ export enum ActionId {
 	SetDescription = 'set_description',
 	PrependToDescription = 'preprend_to_description',
 	AppendToDescription = 'append_to_description',
+	ReplaceInDescription = 'replace_in_description',
 	AddChapterToDescription = 'add_chapter_to_description'
 }
 
@@ -375,6 +376,61 @@ export function listActions(
 					throw new Error('Unable to append text to description: bad paramaters.');
 				}
 			},
+		},
+		[ActionId.ReplaceInDescription]: {
+			name: 'Replace text in description',
+			description: 'Replace the specified text in the description by the given one',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Broadcast:',
+					id: 'broadcast_id',
+					choices: [...broadcastUnfinishedEntries],
+					default: defaultUnfinishedBroadcast,
+				},
+				{
+					type: 'static-text',
+					label: 'Information',
+					id: 'information',
+					value: 'The total length of the description must not exceed 5000 characters.'
+				},
+				{
+					type: 'checkbox',
+					label: 'Case sensitive',
+					id: 'case_sensitive',
+					default: true,
+				},
+				{
+					type: 'textinput',
+					label: 'Replace this text:',
+					id: 'to_replace',
+					tooltip: 'Text which will be replaced',
+					useVariables: true,
+					regex: '/^.{1,}$/',
+				},
+				{
+					type: 'textinput',
+					label: 'by this one:',
+					id: 'replacement_text',
+					tooltip: 'Text which will replace (leave the field empty to remove)',
+					useVariables: true,
+				},
+			],
+			callback:async (event, context): Promise<void> => {
+				const toReplace = await context.parseVariablesInString(event.options.to_replace as string);
+				const replacementText = await context.parseVariablesInString(event.options.replacement_text as string);
+				const broadcastId = checkBroadcastId(event.options);
+
+				if (broadcastId && toReplace) {
+					if (event.options.replacement_text) {
+						return core!.replaceInDescription(broadcastId as BroadcastID, toReplace, event.options.case_sensitive as boolean, replacementText);
+					} else {
+						return core!.replaceInDescription(broadcastId as BroadcastID, toReplace, event.options.case_sensitive as boolean);
+					}
+				} else {
+					throw new Error('Unable to replace in description: bad paramaters.');
+				}
+			}
 		},
 		[ActionId.AddChapterToDescription]: {
 			name: 'Add chapter timecode to description',

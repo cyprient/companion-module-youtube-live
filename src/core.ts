@@ -400,6 +400,22 @@ export class Core {
 		}
 	}
 
+	async replaceInDescription(id: BroadcastID, toReplace: string, caseSensitive: boolean, by?: string) {
+		const broadcast: Broadcast = await this.refreshBroadcast(id);
+		let description: string = broadcast.Description;
+		const toReplaceEscaped = toReplace
+			.replace(/\\n/g, String.fromCharCode(10))
+			.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+		const regex: RegExp = new RegExp(toReplaceEscaped, caseSensitive ? 'gm' : 'gmi');
+
+		description = description.replace(regex, by ? by : '');
+		if (description.length > 0 || description.length <= 5000) {
+			await this.setDescription(id, description);
+		} else {
+			throw new Error(`Unable to replace given text in description; description must not exceed 5000 characters`);
+		}
+	}
+
 	async addChapterToDescription(id: BroadcastID, title: string, separator?: string) {
 		const currentState = await this.checkBroadcastStatus(id);
 		const requiredState = BroadcastLifecycle.Live;
