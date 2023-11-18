@@ -293,11 +293,17 @@ export function listActions(
 					default: defaultBroadcast,
 				},
 				{
+					type: 'static-text',
+					label: 'The total length of the description must not exceed 5000 characters.',
+					id: 'information',
+					value: 'The total length of the description must not exceed 5000 characters.'
+				},
+				{
 					type: 'textinput',
 					label: 'Description:',
 					id: 'desc_content',
 					regex: '/^.{0,5000}$/',
-					tooltip: 'Seize a description with a maximum length of 5000 characters',
+					tooltip: 'Use \n to insert a new line',
 					useVariables: true,
 				},
 			],
@@ -325,11 +331,17 @@ export function listActions(
 					default: defaultBroadcast,
 				},
 				{
+					type: 'static-text',
+					label: 'The total length of the description must not exceed 5000 characters.',
+					id: 'information',
+					value: 'The total length of the description must not exceed 5000 characters.'
+				},
+				{
 					type: 'textinput',
 					label: 'Text:',
 					id: 'text',
 					regex: '/^.{1,5000}$/',
-					tooltip: 'The total length of the description must not exceed 5000 characters.',
+					tooltip: 'Use \n to insert a new line',
 					useVariables: true,
 				},
 			],
@@ -357,11 +369,17 @@ export function listActions(
 					default: defaultBroadcast,
 				},
 				{
+					type: 'static-text',
+					label: 'The total length of the description must not exceed 5000 characters.',
+					id: 'information',
+					value: 'The total length of the description must not exceed 5000 characters.'
+				},
+				{
 					type: 'textinput',
 					label: 'Text:',
 					id: 'text',
 					regex: '/^.{1,5000}$/',
-					tooltip: 'The total length of the description must not exceed 5000 characters.',
+					tooltip: 'Use \n to insert a new line',
 					useVariables: true,
 				},
 			],
@@ -389,12 +407,6 @@ export function listActions(
 					default: defaultUnfinishedBroadcast,
 				},
 				{
-					type: 'static-text',
-					label: 'Information',
-					id: 'information',
-					value: 'The total length of the description must not exceed 5000 characters.'
-				},
-				{
 					type: 'checkbox',
 					label: 'Case sensitive',
 					id: 'case_sensitive',
@@ -404,7 +416,7 @@ export function listActions(
 					type: 'textinput',
 					label: 'Replace this text:',
 					id: 'to_replace',
-					tooltip: 'Text which will be replaced',
+					tooltip: 'Use \n to insert a new line',
 					useVariables: true,
 					regex: '/^.{1,}$/',
 				},
@@ -412,8 +424,14 @@ export function listActions(
 					type: 'textinput',
 					label: 'by this one:',
 					id: 'replacement_text',
-					tooltip: 'Text which will replace (leave the field empty to remove)',
+					tooltip: 'Use \n to insert a new line. Leave this field empty to remove.',
 					useVariables: true,
+				},
+				{
+					type: 'static-text',
+					label: 'The total length of the description must not exceed 5000 characters.',
+					id: 'information',
+					value: 'The total length of the description must not exceed 5000 characters.'
 				},
 			],
 			callback:async (event, context): Promise<void> => {
