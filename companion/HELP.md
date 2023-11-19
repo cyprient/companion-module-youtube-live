@@ -18,12 +18,13 @@ So all broadcasts to be controlled by the module have to be created in the YouTu
   stream data has successfully reached the corresponding YouTube endpoint.
 - **Reload everything from YouTube** - This forces all cached data to be reloaded from YouTube. This can be
   used to make broadcasts created after Companion startup appear in the Companion UI.
-- **Send message to live chat** - This action send a message (200 chars max.) to a YouTube broadcast's live chat.
+- **Send message to live chat** - This action sends a message (200 chars max.) to a YouTube broadcast's live chat.
 - **Insert advertisement (cuepoint)** - This action inserts an advertisement to the YouTube broadcast.
 - **Set description** - This action set the description of the specified broadcast.
-- **Prepend text to description** - This action insert the given text at beginning of the description.
-- **Append text to description** - This action insert the given text at end of the description.
-- **Add chapter timecode to description** - This action insert a chapter timecode at the end of the description.
+- **Prepend text to description** - This action inserts the given text at beginning of the description.
+- **Append text to description** - This action inserts the given text at end of the description.
+- **Replace text in description** - This action replaces the specified part of the description with the given text.
+- **Add chapter timecode to description** - This action inserts a chapter timecode at the end of the description.
 
 [ytapi]: https://developers.google.com/youtube/v3/live/docs/liveBroadcasts/transition
 
